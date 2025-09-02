@@ -37,7 +37,7 @@ mkdir /srv/storage/media/{movies,series} # Do not forget the ownership and acces
 
 #### Also a script, that updates your IP. Useful if you have a dynamic IP. Skip, if you do only plan to use it via LAN.
 <pre>mkdir /srv/ctnuser/scripts # Do not forget the ownership and access.
-vi duckdns.sh
+vi duckdns.sh # Do not forget the ownership and access, also make it executable.
 
 echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token_from_duckdns"&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
 
