@@ -29,10 +29,10 @@ mkdir /srv/storage/media/{movies,series} # Do not forget the ownership and acces
 <pre>vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
 
   "your_domain".duckdns.org {
-  (tab)reverse_proxy <your_internal_IP>:8096 
-  (tab)tls {
-  (tab)dns duckdns <your_token_from_duckdns> 
-  (tab)}
+    reverse_proxy <your_internal_IP>:8096 
+    tls {
+    dns duckdns <your_token_from_duckdns> 
+    }
   }</pre>
 
 #### Also a script, that updates your IP. Useful if you have a dynamic IP. Skip, if you do only plan to use it via LAN.
