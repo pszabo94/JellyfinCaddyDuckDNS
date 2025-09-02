@@ -43,7 +43,7 @@ echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token
 
 #### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do only plan to use it via LAN.
 <pre>crontab -e
-*/5 * * * */srv/ctnuser/scripts/update_cloudflare_dns.sh
+*/5 * * * */srv/ctnuser/scripts/duckdns.sh
 </pre>
 
 #### If you have an external hard drive, you can create a permament mountpoint in the fstab. Careful with this.
