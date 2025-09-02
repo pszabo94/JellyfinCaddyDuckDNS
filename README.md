@@ -1,7 +1,7 @@
 # Jellyfin Caddy DuckDNS, mediaserver for everyone, for free.
 ## Containerized Jellyfin media server with Caddy (reverse proxy) and DuckDNS.
 
-#### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and porforwarding part.
+#### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and portforwarding part.
 
 #### So first, I usually open the firewall ports for the services that I'll host:
 <pre>firewall-cmd --permanent --add-port=8096/tcp #Jellyfin.
