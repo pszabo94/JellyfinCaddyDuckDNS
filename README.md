@@ -6,7 +6,7 @@
 
 ##### I built it on Fedora Server 42, but since the containers are created/running via Podman, it should work on any distro, where Podman can be installed.
 ##### I didn't include any automatic startup for the containers. I like to update my system manually on weekly basis and after the reboot, I start the containers so I see if something went wrong, this is just my preference.
-##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and portforwarding part.
+##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
 
 ### So first, I usually open the firewall ports for the services that I'll host:
 <pre>firewall-cmd --permanent --add-port=8096/tcp #Jellyfin.
