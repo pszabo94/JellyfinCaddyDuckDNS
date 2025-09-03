@@ -1,4 +1,4 @@
-# Jellyfin Caddy DuckDNS, mediaserver for everyone, for free.
+# Jellyfin Caddy DuckDNS, mediaserver for everyone, for free. Reachable from everywhere.
 ## Containerized Jellyfin media server with Caddy (reverse proxy) and DuckDNS.
 
 #### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and portforwarding part.
@@ -9,24 +9,17 @@ firewall-cmd --permanent --add-port=443/tcp #For reverse proxy (HTTPS), you have
 firewall-cmd --reload #Reload to take effect</pre>
 
 #### I like to have a dedicated user, in this case ctnuser, but it is up to you.
-<pre>useradd -M ctnuser # Create the user without home directory.
-usermod -a -G render,video ctnuser # Add the user to the render and video groups.
-mkdir -p /srv/{containers,storage,ctnuser} # Directories that the services will use and home directory for the user.
-chown -R ctnuser:ctnuser containers # Add the ownership to the user.
-chown -R ctnuser:ctnuser storage # Add the ownership to the user.
-chown -R ctnuser:ctnuser ctnuser # Add the ownership to the user.
-chmod 700 ctnuser # Restrict accesses for the directories.
-chmod 700 storage # Restrict accesses for the directories.
-chmod 700 containers # Restrict accesses for the directories.
-usermod -d /srv/ctnuser ctnuser # Set the directory as a home for the user.</pre>
-
-#### Directories for the containers.
-<pre>mkdir /srv/containers/{caddy,jellyfin} # Do not forget the ownership and access.
-mkdir /srv/storage/{downloads,media} # Do not forget the ownership and access.
-mkdir /srv/storage/media/{movies,series} # Do not forget the ownership and access.</pre>
+<pre>sudo useradd -M ctnuser # Create the user without home directory.
+sudo usermod -a -G render,video ctnuser # Add the user to the render and video groups.
+sudo mkdir -p /srv/{containers,storage,ctnuser}
+sudo mkdir -p /srv/containers/{caddy,jellyfin}
+sudo mkdir -p /srv/storage/{downloads,media}
+sudo mkdir -p /srv/storage/media/{movies,series}
+sudo chown -R ctnuser:ctnuser /srv/ctnuser /srv/containers /srv/storage # Add the ownership to the user.
+sudo usermod -d /srv/ctnuser ctnuser # Set the directory as a home for the user.</pre>
 
 #### Caddyfile configuration for DuckDNS. Skip, if you do only plan to use it via LAN.
-<pre>vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
+<pre>sudo vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
 
   "your_domain".duckdns.org {
     reverse_proxy <your_internal_IP>:8096 
@@ -36,8 +29,8 @@ mkdir /srv/storage/media/{movies,series} # Do not forget the ownership and acces
   }</pre>
 
 #### Also a script, that updates your IP. Useful if you have a dynamic IP. Skip, if you do only plan to use it via LAN.
-<pre>mkdir /srv/ctnuser/scripts # Do not forget the ownership and access.
-vi duckdns.sh # Do not forget the ownership and access, also make it executable.
+<pre>mkdir /srv/ctnuser/scripts
+vi duckdns.sh # Do not forget to make it executable.
 
 echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token_from_duckdns"&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
 
@@ -47,7 +40,7 @@ echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token
 </pre>
 
 #### If you have an external hard drive, you can create a permament mountpoint in the fstab. Careful with this.
-<pre>vi /etc/fstab
+<pre>sudo vi /etc/fstab
 
 UUID="UUID_of_the_drive" /srv/storage ext4 defaults,noatime 0 2 # A basic mount, modify if you prefer something else.</pre>
 
@@ -78,8 +71,8 @@ podman create --replace \
   docker.io/jellyfin/jellyfin:latest</pre>
 
 #### For the last step, we have to set up SELinux to treat these as regular containers.
-<pre>semanage fcontext -a -e /var/lib/containers /srv/ctnuser/.local/share/containers
-restorecon -R -F/srv/ctnuser/.local/share/containers</pre>
+<pre>sudo semanage fcontext -a -e /var/lib/containers /srv/ctnuser/.local/share/containers
+sudo restorecon -R -F/srv/ctnuser/.local/share/containers</pre>
 
 #### Now feel free to try it, play with it.
 <pre>podman start caddy
