@@ -1,5 +1,8 @@
 # Jellyfin Caddy DuckDNS, a media server for everyone, for free. Reachable from everywhere.
-## Containerized Jellyfin media server with Caddy (reverse proxy) and DuckDNS.
+### Prerequisites
+<pre>- Internet
+- A Linux distribution
+- Podman</pre>
 
 ##### I built it on Fedora Server 42, but since the containers are created/running via Podman, it should work on any distro, where Podman can be installed.
 ##### I didn't include any automatic startup for the containers. I like to update my system manually on weekly basis and after the reboot, I start the containers so I see if something went wrong, this is just my preference.
