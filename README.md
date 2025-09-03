@@ -24,7 +24,7 @@ sudo chown -R ctnuser:ctnuser /srv/ctnuser /srv/containers /srv/storage # Add th
 sudo usermod -d /srv/ctnuser ctnuser # Set the directory as a home for the user.</pre>
 
 ### Caddyfile configuration for DuckDNS. Skip, if you do only plan to use it via LAN.
-<pre>sudo vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
+<pre>vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
 
   "your_domain".duckdns.org {
     reverse_proxy <your_internal_IP>:8096 
