@@ -9,9 +9,9 @@
 ##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
 
 ### So first, I usually open the firewall ports for the services that I'll host:
-<pre>firewall-cmd --permanent --add-port=8096/tcp #Jellyfin.
-firewall-cmd --permanent --add-port=443/tcp #For reverse proxy (HTTPS), you have to enable port forwarding in your router for this port. Skip, if you do only plan to use it via LAN.
-firewall-cmd --reload #Reload to take effect</pre>
+<pre>sudo firewall-cmd --permanent --add-port=8096/tcp #Jellyfin.
+sudo firewall-cmd --permanent --add-port=443/tcp #For reverse proxy (HTTPS), you have to enable port forwarding in your router for this port. Skip, if you do only plan to use it via LAN.
+sudo firewall-cmd --reload #Reload to take effect</pre>
 
 ### I like to have a dedicated user, in this case ctnuser, but it is up to you.
 <pre>sudo useradd -M ctnuser # Create the user without home directory.
