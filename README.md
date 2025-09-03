@@ -40,7 +40,7 @@ vi duckdns.sh # Do not forget to make it executable.
 echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token_from_duckdns"&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
 
 ### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do only plan to use it via LAN.
-<pre>crontab -e
+<pre>sudo crontab -e
 */5 * * * */srv/ctnuser/scripts/duckdns.sh
 </pre>
 
