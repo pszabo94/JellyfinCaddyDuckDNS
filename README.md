@@ -1,8 +1,8 @@
 # Jellyfin Caddy DuckDNS, a media server for everyone, for free. Reachable from everywhere.
-###### You will probably find mistakes in my build or you have better ways to do it, please feel free to share them with me to imporove my setup and my knowledge too. I'm casual ETC IDE VALAMIT MÉG.
+###### The setup probalby can be improved further, please feel free to share them to imporove my setup and my knowledge too. I'm casual ETC IDE VALAMIT MÉG.
 ##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
 ##### I don't like automatic updates, so you won't find it in this build. I prefer to update and start the system/containers manually to see if it has an error or not with the new packages. Usually takes a few minutes since I don't have that many containers.
-
+##### I have this on a Fedora Server 42, but was working fine on openSUSE MicroOS before and should work on any Linux distribution.
 ##### You can find a step-by-step guide below.
 
 ### Prerequisites
@@ -10,27 +10,25 @@
 - A Linux distribution
 - Podman</pre>
 
-##### I built it on Fedora Server 42, but since the containers are created/running via Podman, it should work on any distro, where Podman can be installed.
-##### I didn't include any automatic startup for the containers. I like to update my system manually on weekly basis and after the reboot, I start the containers so I see if something went wrong, this is just my preference.
-##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
+### For the first step, open the firewall ports for the services that I'll host.
+##### Port 8086 is required by Jellyfin, port 443 is required by Caddy for the reverse proxy to have a secure connection (HTTPS), but if you do not plan to reach Jellyfin outside of your local network, leave the port 443 as it is and skip the Caddy/DuckDNS part of the configuration.
+<pre>sudo firewall-cmd --permanent --add-port=8096/tcp --add-port=443/tcp
+sudo firewall-cmd --reload #Reload to take effect.</pre>
 
-### So first, I usually open the firewall ports for the services that I'll host:
-<pre>sudo firewall-cmd --permanent --add-port=8096/tcp #Jellyfin.
-sudo firewall-cmd --permanent --add-port=443/tcp #For reverse proxy (HTTPS), you have to enable port forwarding in your router for this port. Skip, if you do only plan to use it via LAN.
-sudo firewall-cmd --reload #Reload to take effect</pre>
-
-### I like to have a dedicated user, in this case ctnuser, but it is up to you.
-<pre>sudo useradd -M ctnuser # Create the user without home directory.
+### Create a dedicated user (not necessary, just my preference).
+##### I prefer to have the whole build configured under '/srv', so I create the user without the default home directory and manually set it later.
+<pre>sudo useradd -M ctnuser
 sudo usermod -a -G render,video ctnuser # Add the user to the render and video groups.
 sudo mkdir -p /srv/{containers,storage,ctnuser}
 sudo mkdir -p /srv/containers/{caddy,jellyfin}
 sudo mkdir -p /srv/storage/{downloads,media}
 sudo mkdir -p /srv/storage/media/{movies,series}
 sudo chown -R ctnuser:ctnuser /srv/ctnuser /srv/containers /srv/storage # Add the ownership to the user.
-sudo usermod -d /srv/ctnuser ctnuser # Set the directory as a home for the user.</pre>
+sudo usermod -d /srv/ctnuser ctnuser # Set the directory as home for the user.</pre>
 
-### Caddyfile configuration for DuckDNS. Skip, if you do only plan to use it via LAN.
-<pre>vi /srv/containers/caddy/Caddyfile # Do not forget the ownership and access.
+### Caddyfile configuration for DuckDNS. It is included in the 'caddy' folder. Skip, if you do not plan to reach Jellyfin outside of your local network.
+##### I create this with the dedicated user, so it'll have the ownership automatically.
+<pre>vi /srv/containers/caddy/Caddyfile
 
   "your_domain".duckdns.org {
     reverse_proxy <your_internal_IP>:8096 
@@ -39,28 +37,31 @@ sudo usermod -d /srv/ctnuser ctnuser # Set the directory as a home for the user.
     }
   }</pre>
 
-### Also a script, that updates your IP. Useful if you have a dynamic IP. Skip, if you do only plan to use it via LAN.
+### If you have Dynamic IP, this script will be needed to update your DuckDNS domain. It is included in the 'duckdns' folder. Skip, if you do not plan to reach Jellyfin outside of your local network.
+##### I create this with the dedicated user, so it'll have the ownership automatically. Don't forget to make it executable (chmod +x duckdns.sh)
 <pre>mkdir /srv/ctnuser/scripts
-vi duckdns.sh # Do not forget to make it executable.
+vi duckdns.sh
 
 echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token_from_duckdns"&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
+##### Run the script and it will generate a log file (duck.log), if you set it up good, log will say 'OK', 'NOK' means something is not good.
 
-### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do only plan to use it via LAN.
+### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do not plan to reach Jellyfin outside of your local network.
 <pre>sudo crontab -e
 */5 * * * */srv/ctnuser/scripts/duckdns.sh
 </pre>
 
 ### If you have an external hard drive, you can create a permament mountpoint in the fstab. Careful with this.
+##### Use 'fdisk -l' to find the hard drive that you are looking for, for example '/dev/sda1' and use the 'blkid' to match it with the UUID.
 <pre>sudo vi /etc/fstab
 
 UUID="UUID_of_the_drive" /srv/storage ext4 defaults,noatime 0 2 # A basic mount, modify if you prefer something else.</pre>
 
-### Now, create the containers, with the container user. With the "create --replace", it is easy to recreate them anytime and overwrite the exiting one.
-###### What you need to keep an eye on, is the ":z" and ":Z". These for SELinux. Lowercase means shared, uppercase unshared, very important.
+### Create the containers, with the container user. Both of these are included in '.sh' format in the 'containers' folder.
+##### What you need to keep an eye on, is the ':z' and ':Z'. These for SELinux. Lowercase means shared, uppercase unshared, very important. If you don't use SELinux it doesn't required.
 <pre>podman create --replace \
   --name caddy \
   --publish 443:443/tcp \
-  --network slirp4netns \
+  --network host \
   -e TZ=Europe/Budapest \
   --user 0:0 \
   --volume /srv/containers/caddy/Caddyfile:/etc/caddy/Caddyfile:z \
@@ -81,7 +82,7 @@ podman create --replace \
   --mount type=bind,source=/srv/storage/media,destination=/media,ro=true,relabel=shared \
   docker.io/jellyfin/jellyfin:latest</pre>
 
-### For the last step, we have to set up SELinux to treat these as regular containers.
+### For the last step, if you have SELinux, set up SELinux to treat these as regular containers.
 <pre>sudo semanage fcontext -a -e /var/lib/containers /srv/ctnuser/.local/share/containers
 sudo restorecon -R -F/srv/ctnuser/.local/share/containers</pre>
 
