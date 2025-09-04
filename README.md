@@ -1,7 +1,7 @@
 # Jellyfin Caddy DuckDNS, a media server for everyone, for free. Reachable from everywhere.
-###### This is my first repository and the setup probalby can be improved further too. Please feel free to share your thoughts, experience to imporove the setup and my knowledge.
+###### This is my first repository and the setup probably can be improved further too. Please feel free to share your thoughts, experience to imporove the setup and my knowledge.
 ##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
-##### I don't like automatic updates, so you won't find it in this build. I prefer to update and start the system/containers manually to see if it has an error or not with the new packages. Usually takes a few minutes since I don't have that many containers.
+##### I don't like automatic updates, so you won't find it in this build. I prefer to update and start the system/containers manually to see if it has an error or not with the new packages.
 ##### I have this on a Fedora Server 42, but was working fine on openSUSE MicroOS before and should work on any Linux distribution.
 ##### You can find a step-by-step guide below.
 
@@ -10,8 +10,8 @@
 - A Linux distribution
 - Podman</pre>
 
-### For the first step, open the firewall ports for the services that I'll host.
-##### Port 8086 is required by Jellyfin, port 443 is required by Caddy for the reverse proxy to have a secure connection (HTTPS), you also have to set por forwarding to this port in your router, but if you do not plan to reach Jellyfin outside of your local network, leave the port 443 as it is and skip the Caddy/DuckDNS part of the configuration.
+### For the first step, open the firewall ports for the services.
+##### Port 8086 is required by Jellyfin, port 443 is required by Caddy for the reverse proxy to have a secure connection (HTTPS). You also have to set port forwarding to this port in your router, but if you do not plan to reach Jellyfin outside of your local network, leave the port 443 as it is and skip the Caddy/DuckDNS part of the configuration.
 <pre>sudo firewall-cmd --permanent --add-port=8096/tcp --add-port=443/tcp
 sudo firewall-cmd --reload #Reload to take effect.</pre>
 
@@ -33,8 +33,8 @@ sudo usermod -d /srv/ctnuser ctnuser # Set the directory as home for the user.</
 ### Caddyfile configuration for DuckDNS. It is included in the 'caddy' folder. Skip, if you do not plan to reach Jellyfin outside of your local network.
 ##### I create this with the dedicated user, so it'll have the ownership automatically.
 <pre>vi /srv/containers/caddy/Caddyfile</pre>
- <pre> "your_domain".duckdns.org {
-    reverse_proxy <your_internal_IP>:8096 
+ <pre> your_domain.duckdns.org {
+    reverse_proxy your_internal_IP:8096 
     tls {
     dns duckdns <your_token_from_duckdns> 
     }
@@ -44,7 +44,7 @@ sudo usermod -d /srv/ctnuser ctnuser # Set the directory as home for the user.</
 ##### I create this with the dedicated user, so it'll have the ownership automatically. Don't forget to make it executable (chmod +x duckdns.sh)
 <pre>mkdir /srv/ctnuser/scripts
 vi duckdns.sh</pre>
-<pre>echo url="https://www.duckdns.org/update?domains="your_domain"&token="your_token_from_duckdns"&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
+<pre>echo url="https://www.duckdns.org/update?domains=your_domain&token=your_token_from_duckdns&ip=" | curl -k -o /srv/ctnuser/scripts/duck.log -K -</pre>
 ##### Run the script and it will generate a log file (duck.log), if you set it up good, log will say 'OK', 'NOK' means something is not good.
 
 ### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do not plan to reach Jellyfin outside of your local network.
@@ -58,7 +58,7 @@ vi duckdns.sh</pre>
 <pre>UUID="UUID_of_the_drive" /srv/storage ext4 defaults,noatime 0 2 # A basic mount, modify if you prefer something else.</pre>
 
 ### Create the containers, with the container user. Both of these are included in '.sh' format in the 'containers' folder. Caddy is not needed if you do not plan to reach Jellyfin outside of your local network.
-##### Caddy is DuckDNS specific, if you use something else, modify accordingly. What you need to keep an eye on, is the ':z' and ':Z'. These for SELinux. Lowercase means shared, uppercase unshared, very important. If you don't use SELinux it doesn't required.
+##### Caddy is DuckDNS specific, if you use something else, modify accordingly. What you need to keep an eye on, is the ':z' and ':Z'. These for are SELinux. Lowercase means shared, uppercase unshared, very important. If you don't use SELinux it doesn't required.
 <pre>podman create --replace \
   --name caddy \
   --publish 443:443/tcp \
@@ -90,5 +90,3 @@ sudo setsebool -P container_use_dri_devices 1 # This provides permissions for co
 ### Now feel free to try it, play with it.
 <pre>podman start caddy
 podman start jellyfin</pre>
-
-#### Additional notes.
