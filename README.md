@@ -36,7 +36,7 @@ sudo usermod -d /srv/ctnuser ctnuser # Set the directory as home for the user.</
  <pre> your_domain.duckdns.org {
     reverse_proxy your_internal_IP:8096 
     tls {
-    dns duckdns <your_token_from_duckdns> 
+    dns duckdns your_token_from_duckdns
     }
   }</pre>
 
