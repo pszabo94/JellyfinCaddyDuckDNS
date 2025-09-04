@@ -48,6 +48,7 @@ vi duckdns.sh</pre>
 ##### Run the script and it will generate a log file (duck.log), if you set it up good, log will say 'OK', 'NOK' means something is not good.
 
 ### Create a crontab entry to run the DuckDNS script every 5 minutes. Skip, if you do not plan to reach Jellyfin outside of your local network.
+##### User is not in the sudoers group and doesn't have a password. So in my example, exit the user back to the default user.
 <pre>sudo crontab -e</pre>
 <pre>*/5 * * * */srv/ctnuser/scripts/duckdns.sh
 </pre>
