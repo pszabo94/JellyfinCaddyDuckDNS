@@ -1,4 +1,10 @@
 # Jellyfin Caddy DuckDNS, a media server for everyone, for free. Reachable from everywhere.
+###### You will probably find mistakes in my build or you have better ways to do it, please feel free to share them with me to imporove my setup and my knowledge too. I'm casual ETC IDE VALAMIT MÉG.
+##### For this setup I use Podman, but if you prefer Docker, feel free to use that. Also, if you are not planning to make it reachable outside of your local network, skip the Caddy, DuckDNS and port forwarding part.
+##### I don't like automatic updates, so you won't find it in this build. I prefer to update and start the system/containers manually to see if it has an error or not with the new packages. Usually takes a few minutes since I don't have that many containers.
+
+##### You can find a step-by-step guide below.
+
 ### Prerequisites
 <pre>- Internet
 - A Linux distribution
