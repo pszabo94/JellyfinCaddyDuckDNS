@@ -5,12 +5,9 @@
 ##### I have this on a Fedora Server 42, but was working fine on openSUSE MicroOS before and should work on any Linux distribution.
 ##### You can find a step-by-step guide below.
 
-### Prerequisites
-<pre>- Internet
-- A Linux distribution
-- Podman</pre>
-
-##### Jellyfin has a good documentation, I suggest to check it - https://jellyfin.org/docs/
+#### I suggest to check the Jellyfin documentation and create a DuckDNS domain if you plan to reach your Jellyfin outside of your local network.
+<pre>https://jellyfin.org/docs/
+https://www.duckdns.org/</pre>
 
 ### For the first step, open the firewall ports for the services.
 ##### Port 8086 is required by Jellyfin, port 443 is required by Caddy for the reverse proxy to have a secure connection (HTTPS). You also have to set port forwarding to this port in your router, but if you do not plan to reach Jellyfin outside of your local network, leave the port 443 as it is and skip the Caddy/DuckDNS part of the configuration.
