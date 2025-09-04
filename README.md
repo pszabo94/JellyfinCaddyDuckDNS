@@ -88,6 +88,6 @@ sudo restorecon -R -F/srv/ctnuser/.local/share/containers # This applies the SEL
 sudo setsebool -P container_use_dri_devices 1 # This provides permissions for containers to access and use DRI devices. It is necessary for hardware acceleration.
 </pre>
 
-### Now feel free to try it, play with it.
+### Now feel free to try it, play with it. Execute the commands with the container user.
 <pre>podman start caddy
 podman start jellyfin</pre>
