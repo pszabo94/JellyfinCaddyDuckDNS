@@ -57,8 +57,8 @@ vi duckdns.sh</pre>
 <pre>sudo vi /etc/fstab</pre>
 <pre>UUID="UUID_of_the_drive" /srv/storage ext4 defaults,noatime 0 2 # A basic mount, modify if you prefer something else.</pre>
 
-### Create the containers, with the container user. Both of these are included in '.sh' format in the 'containers' folder.
-##### What you need to keep an eye on, is the ':z' and ':Z'. These for SELinux. Lowercase means shared, uppercase unshared, very important. If you don't use SELinux it doesn't required.
+### Create the containers, with the container user. Both of these are included in '.sh' format in the 'containers' folder. Caddy is not needed if you do not plan to reach Jellyfin outside of your local network.
+##### Caddy is DuckDNS specific, if you use something else, modify accordingly. What you need to keep an eye on, is the ':z' and ':Z'. These for SELinux. Lowercase means shared, uppercase unshared, very important. If you don't use SELinux it doesn't required.
 <pre>podman create --replace \
   --name caddy \
   --publish 443:443/tcp \
