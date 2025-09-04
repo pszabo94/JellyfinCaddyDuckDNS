@@ -21,7 +21,7 @@ sudo firewall-cmd --reload #Reload to take effect.</pre>
 ### Create a dedicated user (not necessary, just my preference).
 ##### I prefer to have the whole build configured under '/srv', so I create the user without the default home directory and manually set it later.
 <pre>sudo useradd -M ctnuser
-sudo usermod -a -G render,video ctnuser # Add the user to the render and video groups.
+sudo usermod -aG render,video ctnuser # Add the user to the render and video groups.
 sudo mkdir -p /srv/{containers,storage,ctnuser}
 sudo mkdir -p /srv/containers/{caddy,jellyfin}
 sudo mkdir -p /srv/storage/{downloads,media}
