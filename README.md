@@ -14,7 +14,7 @@ https://www.duckdns.org/</pre>
 <pre>sudo firewall-cmd --permanent --add-port=8096/tcp --add-port=443/tcp
 sudo firewall-cmd --reload #Reload to take effect.</pre>
 
-### Caddy has to use the port 443, so it has to be enabled for unprivileged access. Skip, if you do not plan to reach Jellyfin outside of your local network.
+### Caddy requires port 443 for revers proxy, so it has to be enabled for unprivileged access. Skip, if you do not plan to reach Jellyfin outside of your local network.
 <pre>sudo vi /etc/sysctl.conf</pre>
 <pre>net.ipv4.ip_unprivileged_port_start=443 # Put this into the file.</pre>
 <pre>sudo sysctl -p # Reload to take effect.</pre>
