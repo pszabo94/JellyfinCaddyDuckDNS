@@ -5,7 +5,7 @@
 ##### I have this on a Fedora Server 42, but was working fine on openSUSE MicroOS before and should work on any Linux distribution.
 ##### You can find a step-by-step guide below.
 
-#### I suggest to check the Jellyfin documentation and create a DuckDNS domain if you plan to reach your Jellyfin outside of your local network.
+### I suggest to check the Jellyfin documentation and create a DuckDNS domain if you plan to reach your Jellyfin outside of your local network.
 <pre>https://jellyfin.org/docs/
 https://www.duckdns.org/</pre>
 
