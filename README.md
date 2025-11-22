@@ -9,7 +9,7 @@
 <pre>https://jellyfin.org/docs/
 https://www.duckdns.org/</pre>
 
-### For the first step, open the firewall ports for the services.
+#### For the first step, open the firewall ports for the services.
 ##### Port 8086 is required by Jellyfin, port 443 is required by Caddy for the reverse proxy to have a secure connection (HTTPS). You also have to set port forwarding to this port in your router, but if you do not plan to reach Jellyfin outside of your local network, leave the port 443 as it is and skip the Caddy/DuckDNS part of the configuration.
 <pre>sudo firewall-cmd --permanent --add-port=8096/tcp --add-port=443/tcp
 sudo firewall-cmd --reload #Reload to take effect.</pre>
